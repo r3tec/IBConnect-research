@@ -112,9 +112,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSharpClient\client\CSharpAPI.csproj">
+    <ProjectReference Include="..\ArizetConnect.IBGateway.Core\ArizetConnect.IB.Core.csproj">
       <Project>{8ede0744-96c2-40b0-a8dc-37df79370203}</Project>
-      <Name>CSharpAPI</Name>
+      <Name>ArizetConnect.IB.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

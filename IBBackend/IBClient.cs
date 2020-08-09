@@ -629,7 +629,7 @@ namespace IBBackend
 
         void EWrapper.connectAck()
         {
-            if (ClientSocket.AsyncEConnect)
+            //if (ClientSocket.asyncEConnect)
                 ClientSocket.startApi();
         }
 

@@ -52,13 +52,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSharpClient\client\CSharpAPI.csproj">
+    <ProjectReference Include="..\ArizetConnect.IBGateway.Core\ArizetConnect.IB.Core.csproj">
       <Project>{8ede0744-96c2-40b0-a8dc-37df79370203}</Project>
-      <Name>CSharpAPI</Name>
+      <Name>ArizetConnect.IB.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\IBBackend\IBBackend.csproj">
+    <ProjectReference Include="..\IBBackend\ArizetConnect.IB.Backend.csproj">
       <Project>{ce64ae72-af6b-44aa-b8ad-8122af77ffd3}</Project>
-      <Name>IBBackend</Name>
+      <Name>ArizetConnect.IB.Backend</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -96,9 +96,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\source\csharpclient\client\CSharpAPI.csproj">
+    <ProjectReference Include="..\ArizetConnect.IBGateway.Core\ArizetConnect.IB.Core.csproj">
       <Project>{8EDE0744-96C2-40B0-A8DC-37DF79370203}</Project>
-      <Name>CSharpAPI</Name>
+      <Name>ArizetConnect.IB.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

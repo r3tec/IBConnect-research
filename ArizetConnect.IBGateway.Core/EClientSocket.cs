@@ -15,7 +15,7 @@ namespace IBApi
      * @brief TWS/Gateway client class
      * This client class contains all the available methods to communicate with IB. Up to 32 clients can be connected to a single instance of the TWS/Gateway simultaneously. From herein, the TWS/Gateway will be referred to as the Host.
      */
-    public class EClientSocket : EClient,  EClientMsgSink
+    public class EClientSocket : GatewayMessageHandler,  EClientMsgSink
     {
         private int port;
 
@@ -58,7 +58,7 @@ namespace IBApi
             ServerTime = time;
             isConnected = true;
 
-            if (!this.AsyncEConnect)
+//            if (!this.asyncEConnect)
                 startApi();
         }
 
@@ -96,15 +96,12 @@ namespace IBApi
 
                 sendConnectRequest();
 
-                if (!AsyncEConnect)
+                var eReader = new EReader(this, eReaderSignal);
+                ///todo: removed async stub code, need to implement for real
+                while (serverVersion == 0 && eReader.putMessageToQueue())
                 {
-                    var eReader = new EReader(this, eReaderSignal);
-
-                    while (serverVersion == 0 && eReader.putMessageToQueue())
-                    {
-                        eReaderSignal.waitForSignal();
-                        eReader.processMsgs();
-                    }
+                    eReaderSignal.waitForSignal();
+                    eReader.processMsgs();
                 }
             }
             catch (ArgumentNullException ane)

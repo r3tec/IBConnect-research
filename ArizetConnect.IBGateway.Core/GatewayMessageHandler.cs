@@ -11,11 +11,14 @@ using System.Linq;
 namespace IBApi
 {
     /**
-     * @class EClient
+     * @class GatewayMessageHandler
      * @brief TWS/Gateway client class
-     * This client class contains all the available methods to communicate with IB. Up to thirty-two clients can be connected to a single instance of the TWS/Gateway simultaneously. From herein, the TWS/Gateway will be referred to as the Host.
+     * This client class contains all the available methods to communicate with IB. 
+     * Up to thirty-two clients can be connected to a single instance of the TWS/Gateway simultaneously. 
+     * From herein, the TWS/Gateway will be referred to as the Host.
      */
-    public abstract class EClient
+    /// This class handles translation of data requests into 
+    public abstract class GatewayMessageHandler
     {
         protected int serverVersion;
 
@@ -38,14 +41,13 @@ namespace IBApi
          * @param wrapper EWrapper's implementing class instance. Every message being delivered by IB to the API client will be forwarded to the EWrapper's implementing class.
          * @sa EWrapper
          */
-        public EClient(EWrapper wrapper)
+        public GatewayMessageHandler(EWrapper wrapper)
         {
             this.wrapper = wrapper;
             this.clientId = -1;
             this.extraAuth = false;
             this.isConnected = false;
             this.optionalCapabilities = "";
-            this.AsyncEConnect = false;
         }
 
         /**
@@ -3535,6 +3537,5 @@ namespace IBApi
             return new BinaryReader(tcpStream).ReadBytes(msgSize);
         }
 
-        public bool AsyncEConnect { get; set; }
     }
 }

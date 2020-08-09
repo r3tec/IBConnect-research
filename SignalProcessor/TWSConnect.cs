@@ -21,7 +21,7 @@ namespace SignalProcessor
             try
             {
                 ibClient = new IBClient(signal);
-                port = 7497;
+                port = 4002;
 
                 ibClient.ClientId = 1;
                 ibClient.ClientSocket.eConnect(host, port, ibClient.ClientId);
