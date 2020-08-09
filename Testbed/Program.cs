@@ -5,6 +5,8 @@ using IBApi;
 using System.Threading;
 using IBSamples;
 using System.Collections.Generic;
+using SignalProcessor;
+using IBBackend;
 
 namespace Samples
 {
@@ -14,7 +16,54 @@ namespace Samples
         /* IB will not be responsible for accidental executions on your live account. */
         /* Any stock or option symbols displayed are for illustrative purposes only and are not intended to portray a recommendation. */
         /* Before contacting our API support team please refer to the available documentation. */
-        public static int Main(string[] args)
+        public static void Main(string[] args)
+        {
+            EReaderMonitorSignal signal = TWSReader.CreateReader();
+
+            TWSConnect conn = new TWSConnect();
+            IBClient client = conn.Connect(signal);
+            TWSReader.Start(client);
+            Thread.Sleep(1000);
+
+
+            TestAddOrder(client);
+            Thread.Sleep(1000);
+            TestRequestOrders(client);
+            conn.Disconnect();
+            Console.ReadLine();
+        }
+
+        static void TestAddOrder(IBClient client)
+        {
+            ContractManager contMan = new ContractManager();
+            Contract contract = contMan.GetOrderContract();
+
+            OrderManager.StartOrderManager(client);
+            Order order = OrderManager.CreateOrder(0, 0, "BUY", "MKT", 0, 100);
+            OrderManager.PlaceOrder(contract, order);
+            Console.WriteLine("order placed");
+        }
+
+        static void TestRequestOrders(IBClient ibClient)
+        {
+            ibClient.OrderStatus += new Action<IBBackend.Messages.OrderStatusMessage>((msg) =>
+            {
+                Console.WriteLine($"order: id {msg.OrderId}, price: {msg.MktCapPrice}");
+            });
+            ibClient.OpenOrder += new Action<IBBackend.Messages.OpenOrderMessage>((msg) =>
+            {
+                Console.WriteLine($"id: {msg.OrderId}, ticker: {msg.Contract.LocalSymbol}");
+            });
+            ibClient.OpenOrderEnd += new Action(() =>
+            {
+                Thread.Sleep(100);
+                Console.WriteLine("===End of orders====");
+            });
+            OrderManager.RequestOrders();
+            Console.ReadLine();
+        }
+
+        static int RunOld()
         {
             testImpl = new EWrapperImpl();
 
@@ -33,11 +82,12 @@ namespace Samples
             /*************************************************************************************************************************************************/
             /* One (although primitive) way of knowing if we can proceed is by monitoring the order's nextValidId reception which comes down automatically after connecting. */
             /*************************************************************************************************************************************************/
-            while (testImpl.NextOrderId <= 0) { }            
-            testIBMethods(clientSocket, testImpl.NextOrderId);            
+            while (testImpl.NextOrderId <= 0) { }
+            testIBMethods(clientSocket, testImpl.NextOrderId);
             Console.WriteLine("Disconnecting...");
             clientSocket.eDisconnect();
             return 0;
+
         }
 
         static EWrapperImpl testImpl;

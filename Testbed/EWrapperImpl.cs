@@ -522,7 +522,7 @@ namespace Samples
         //! [connectack]
         public void connectAck()
         {
-            if (ClientSocket.AsyncEConnect)
+            //if (ClientSocket.AsyncEConnect)
                 ClientSocket.startApi();
         }
         //! [connectack]

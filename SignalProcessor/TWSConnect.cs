@@ -12,7 +12,7 @@ namespace SignalProcessor
     public class TWSConnect
     {
         //private EReaderMonitorSignal signal = new EReaderMonitorSignal();
-        protected IBClient ibClient;
+        protected IBClient client;
 
         public IBClient Connect(EReaderMonitorSignal signal)
         {
@@ -20,13 +20,22 @@ namespace SignalProcessor
             string host = "127.0.0.1";
             try
             {
-                ibClient = new IBClient(signal);
-                port = 4002;
+                client = new IBClient(signal);
+                port = 4111;
+                client.Error += new Action<int, int, string, Exception>((id, code, msg, ex) =>
+                {
+                    Console.Write(msg);
+                    if (ex != null)
+                        throw ex;
+                });
 
-                ibClient.ClientId = 1;
-                ibClient.ClientSocket.eConnect(host, port, ibClient.ClientId);
+                client.ClientId = 1;
+                client.ClientSocket.eConnect(host, port, client.ClientId);
+
+                client.ClientSocket.reqIds(-1);
                 Console.WriteLine("connected");
-                return ibClient;
+
+                return client;
             }
             catch (Exception)
             {
@@ -35,22 +44,9 @@ namespace SignalProcessor
 
         }
 
-        public void PlaceOrder(Contract contract, Order order)
-        {
-            if (order.OrderId != 0)
-            {
-                ibClient.ClientSocket.placeOrder(order.OrderId, contract, order);
-            }
-            else
-            {
-                ibClient.ClientSocket.placeOrder(ibClient.NextOrderId, contract, order);
-                ibClient.NextOrderId++;
-            }
-        }
-
         public void Disconnect()
         {
-            ibClient.ClientSocket.eDisconnect();
+            client.ClientSocket.eDisconnect();
         }
     }
 }

@@ -9,7 +9,28 @@ namespace IBBackend
 {
     public class OrderManager
     {
-        public Order CreateOrder(int orderId, 
+        private static IBClient ibClient;
+
+        public static void StartOrderManager(IBClient ibc) { ibClient = ibc; }
+        public static void RequestOrders()
+        {
+            ibClient.ClientSocket.reqAllOpenOrders();
+        }
+
+        public static void PlaceOrder(Contract contract, Order order)
+        {
+            if (order.OrderId != 0)
+            {
+                ibClient.ClientSocket.placeOrder(order.OrderId, contract, order);
+            }
+            else
+            {
+                ibClient.ClientSocket.placeOrder(ibClient.NextOrderId, contract, order);
+                ibClient.NextOrderId++;
+            }
+        }
+
+        public static Order CreateOrder(int orderId, 
             int parentOrderId, 
             string action, 
             string orderType,
